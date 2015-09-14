@@ -2,8 +2,9 @@
 <html lang="zh-cmn-Hans-CN">
 <head>
     <meta charset="UTF-8" />
-    <title><?php echo isset($v['title']) ? $v['title'] . ' 筛选网' : '筛选网';?></title>
     <link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
+    <title><?=isset($v['title']) ? $v['title'] . ' 筛选商城' : '筛选商城'?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
     /*default*/
     body
