@@ -49,7 +49,7 @@ require FdHelperLib::getViewFilePath('head');//由于head中的title是由数据
     ?>
     <div class="area_5">
     <?php
-        require FdHelperLib::getViewFilePath('contact_us');
+        require FdHelperLib::getViewFilePath('comments');
     ?>
     </div>
 </div>
