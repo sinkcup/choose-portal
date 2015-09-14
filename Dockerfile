@@ -9,8 +9,8 @@ RUN docker-php-ext-install zip
 RUN ln -s ../mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 ADD php.ini /usr/local/etc/php/
 
-ADD . /var/www/html/choose-portal
-RUN cd /var/www/html/choose-portal/ && \
+ADD . /var/www/choose-portal
+RUN cd /var/www/choose-portal/ && \
   mkdir -p tmp && \
   chmod 777 tmp
 ADD apache2/sites-enabled/ /etc/apache2/sites-enabled/
