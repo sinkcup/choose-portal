@@ -13,8 +13,7 @@ require FdHelperLib::getViewFilePath('head');
     var product_preview_img_height = '<?php echo $v['product_preview_img_height'];?>';
 
     var img_filename = '<?php echo $v['img_filename'];?>';
-    var tmp = img_filename.split('.');
-    img.src = img_server_uri + tmp[0] + '-' + img_quality + '-' + product_preview_img_width + 'x' + product_preview_img_height + '.' + tmp[1];
+    img.src = img_server_uri + img_filename  + '?imageView2/0/q/' + img_quality + '/w/' + product_preview_img_width + '/h/' + product_preview_img_height;
     img.width = product_preview_img_width;
     img.height = product_preview_img_height;
     var iframe = self;

@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__).'/../lib/auto_load.php';
-$written_language_tag = LanguageLib::getWrittenLanguageTag();
+$written_language_tag = UserLib::getWrittenLanguageTag();
 $uri = $_SERVER['REQUEST_URI'];
 function encodeFilterUri($uri_data, $where=array())
 {
@@ -141,7 +141,6 @@ if(0 < preg_match('/^\/add_img$/', $uri))
 //添加图片处理
 if(0 < preg_match('/^\/add_img_process$/', $uri))
 {
-    //curl -F 'file=@1.jpg' -F 'need_size={"200xauto","1000xauto"}' -H 'Accept:application/json; version=0.1' 'http://img.shaixuan.org/'
     $tmp = explode('.',$_FILES['file']['name']);
     $last = count($tmp) -1;
     $ext = strtolower($tmp[$last]); //后缀名用小写
@@ -158,11 +157,28 @@ if(0 < preg_match('/^\/add_img_process$/', $uri))
             'file' => '@' . $new_file_path
         )
     );
-    $tmp = explode('/',$uri);
-    $map = ConfigParserLib::get('category', 'category_map');
-    $r = FdHelperLib::crudImgApi('', $params);
+    $tmp = FdHelperLib::crudApi('qiniu/token' . array_search($uri_data['category_name'], $map), $written_language_tag, array('post'=>array('todo'=>1)));
+    error_log(var_export($tmp, true));
+    $token = $tmp['token'];
+
+    // 要上传文件的本地路径
+    $filePath = $new_file_path;
+
+    // 上传到七牛后保存的文件名
+    $newFilename = md5($new_file_path) . '.' . $ext;
+    $key = 'shaixuan/' . $newFilename;
+
+    // 初始化 UploadManager 对象并进行文件的上传。
+    $uploadMgr = new Qiniu\Storage\UploadManager();
+    list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+    if ($err !== null) {
+        error_log(var_export($err, true));
+    } else {
+        error_log(var_export($ret, true));
+    }
+
     $v['title'] = '';
-    $v['img_filename'] = $r['filename'];
+    $v['img_filename'] = $newFilename;
     $v['img_server'] = ConfigParserLib::get('fd', 'img_server');
     $v['product_preview_img_width'] = ConfigParserLib::get('fd', 'product_preview_img_width');
     $v['product_preview_img_height'] = ConfigParserLib::get('fd', 'product_preview_img_height');
