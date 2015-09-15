@@ -1,5 +1,5 @@
 <?php
-class LanguageLib
+class UserLib
 {
     private function __construct()
     {
