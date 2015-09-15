@@ -1,5 +1,5 @@
 <?php
-function __autoload($class_name) {
+function oldAutoload($class_name) {
     $src_dir = dirname(__FILE__) . '/../';
     if(0 < preg_match('/Lib$/', $class_name))
     {
@@ -66,4 +66,5 @@ function __autoload($class_name) {
         return true;
     }
 }
-?>
+spl_autoload_register('oldAutoload');
+require dirname(__FILE__).'/../vendor/autoload.php';
