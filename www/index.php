@@ -157,8 +157,7 @@ if(0 < preg_match('/^\/add_img_process$/', $uri))
             'file' => '@' . $new_file_path
         )
     );
-    $tmp = FdHelperLib::crudApi('qiniu/token' . array_search($uri_data['category_name'], $map), $written_language_tag, array('post'=>array('todo'=>1)));
-    error_log(var_export($tmp, true));
+    $tmp = FdHelperLib::crudApi('qiniu/auth', $written_language_tag, array('post'=>array('nothing'=>1)));
     $token = $tmp['token'];
 
     // 要上传文件的本地路径
@@ -171,11 +170,6 @@ if(0 < preg_match('/^\/add_img_process$/', $uri))
     // 初始化 UploadManager 对象并进行文件的上传。
     $uploadMgr = new Qiniu\Storage\UploadManager();
     list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
-    if ($err !== null) {
-        error_log(var_export($err, true));
-    } else {
-        error_log(var_export($ret, true));
-    }
 
     $v['title'] = '';
     $v['img_filename'] = $newFilename;
