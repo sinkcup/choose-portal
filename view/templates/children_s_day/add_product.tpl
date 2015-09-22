@@ -58,11 +58,33 @@
 }
 </style>
 <div class="module_filter">
-    <p class="filter_title">筛选条件</p>
+    <p class="filter_title">商品录入</p>
     <div class="filter_detail">
     <form method="post" action="add_process">
         <ul>
+            <li><span class="filter_name"><label for="jd_id">京东ID</lable></span>
+            <input type="text" name="jd_id" id="jd_id" value="<?=isset($v['product']['jd_id']) ? $v['product']['jd_id'] : ''?>" />
+            <li><span class="filter_name"><label for="amazon_cn_id">亚马逊中国ID</lable></span>
+            <input type="text" name="amazon_cn_id" id="amazon_cn_id" value="<?=isset($v['product']['amazon_cn_id']) ? $v['product']['amazon_cn_id'] : ''?>" />
             <?php
+                foreach($v['detail_attribute'] as $attribute_name)
+                {
+                    echo '<li><span class="filter_name"><label for="' . $attribute_name . '">' . $v['detail_attribute_name_wlp'][$attribute_name] . '</lable></span>';
+                    echo '<input type="text" name="' . $attribute_name . '" id="' . $attribute_name . '" value="' . $v['product'][$attribute_name] . '" /></li>';
+                }
+            ?>
+        </ul>
+         <div id="preview_img" class="preview_img">
+        </div>
+        <div class="clear">
+        </div>
+        <iframe src="/add_img_process?uri=<?=$v['product']['img']?>" class="add_img">
+        </iframe>
+        <iframe src="/add_img" class="add_img">
+        </iframe>
+        <ul>
+        <?php
+ 
                 //循环行
                 foreach($v['filter_rows'] as $row)
                 {
@@ -97,21 +119,10 @@
                         echo '</ul></li>';
                     }
                 }
-                foreach($v['detail_attribute'] as $attribute_name)
-                {
-                    echo '<li><span class="filter_name"><label for="' . $attribute_name . '">' . $v['detail_attribute_name_wlp'][$attribute_name] . '</lable></span>';
-                    echo '<input type="text" name="' . $attribute_name . '" id="' . $attribute_name . '" value="" /></li>';
-                }
-            ?>
+           ?>
             </ul>
         </ul>
-        <div id="preview_img" class="preview_img">
-        </div>
-        <div class="clear">
-        </div>
-        <iframe src="/add_img" class="add_img">
-        </iframe>
-        <input type="submit" />
+       <input type="submit" />
     </form>
     </div>
 </div>

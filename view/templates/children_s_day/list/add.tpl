@@ -26,21 +26,21 @@ require FdHelperLib::getViewFilePath('head');//由于head中的title是由数据
 	?>
 	</div>
 	<div class="area_3">
-	<?php
-	//require FdHelperLib::getViewFilePath('group_hidden_categories_nav');
-	?>
+            <div class="module_uri">
+                <form method="get" action="">
+                    <label for="uri">购买链接：</label>
+                    <input type="text" name="uri" id="uri" value="<?=isset($_GET['uri']) ? $_GET['uri'] : ''?>" />
+                    <input type="submit" />
+                </form>
+            </div>
 	</div>
 	<div class="area_4">
 	<?php
-	require FdHelperLib::getViewFilePath('add_product');
-	?>
-	<?php
-	//require FdHelperLib::getViewFilePath('products_preview');
+        if (isset($_GET['uri']) && !empty($_GET['uri'])) {
+	    require FdHelperLib::getViewFilePath('add_product');
+        }
 	?>
 	</div>
-	<?php
-	//require dirname(__FILE__).'/../../controller/list/module_page_num.php';
-	?>
 </div>
 </body>
 </html>
