@@ -1,7 +1,7 @@
 <?php
 require dirname(__FILE__).'/../lib/auto_load.php';
 $written_language_tag = UserLib::getWrittenLanguageTag();
-$uri = $_SERVER['REQUEST_URI'];
+$uri = $_SERVER['SCRIPT_NAME'];
 function encodeFilterUri($uri_data, $where=array())
 {
     $map = ConfigParserLib::get('category', 'category_map');
@@ -141,22 +141,21 @@ if(0 < preg_match('/^\/add_img$/', $uri))
 //添加图片处理
 if(0 < preg_match('/^\/add_img_process$/', $uri))
 {
-    $tmp = explode('.',$_FILES['file']['name']);
-    $last = count($tmp) -1;
-    $ext = strtolower($tmp[$last]); //后缀名用小写
-    if(!in_array($ext, array('jpg', 'png')))
-    {
-        exit;
+    if (isset($_GET['uri'])) {
+        $ext = 'jpg';
+        $new_file_path = '/tmp/' . md5($_GET['uri']) . '.' . $ext;
+        exec('wget -O ' . $new_file_path . ' "' . $_GET['uri'] . '"');
+    } else {
+        $tmp = explode('.',$_FILES['file']['name']);
+        $last = count($tmp) -1;
+        $ext = strtolower($tmp[$last]); //后缀名用小写
+        if(!in_array($ext, array('jpg', 'png')))
+        {
+            exit;
+        }
+        $new_file_path = $_FILES['file']['tmp_name'] . '.' . $ext;
+        move_uploaded_file($_FILES["file"]["tmp_name"], $new_file_path);
     }
-    $new_file_path = $_FILES['file']['tmp_name'] . '.' . $ext;
-    move_uploaded_file($_FILES["file"]["tmp_name"], $new_file_path);
-    $params = array
-    (
-        'post' => array
-        (
-            'file' => '@' . $new_file_path
-        )
-    );
     $tmp = FdHelperLib::crudApi('qiniu/auth', $written_language_tag, array('post'=>array('nothing'=>1)));
     $token = $tmp['token'];
 
