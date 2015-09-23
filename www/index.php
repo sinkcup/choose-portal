@@ -139,36 +139,33 @@ if(0 < preg_match('/^\/add_img$/', $uri))
     exit;
 }
 //添加图片处理
-if(0 < preg_match('/^\/add_img_process$/', $uri))
-{
+if(0 < preg_match('/^\/add_img_process$/', $uri)) {
     if (isset($_GET['uri'])) {
-        $ext = 'jpg';
-        $new_file_path = '/tmp/' . md5($_GET['uri']) . '.' . $ext;
-        exec('wget -O ' . $new_file_path . ' "' . $_GET['uri'] . '"');
+        $tmp = FdHelperLib::crudApi('qiniu/fetch', $written_language_tag, array('post'=>array('uri'=>$_GET['uri'])));
+        $newFilename = $tmp['filename'];
     } else {
         $tmp = explode('.',$_FILES['file']['name']);
         $last = count($tmp) -1;
         $ext = strtolower($tmp[$last]); //后缀名用小写
-        if(!in_array($ext, array('jpg', 'png')))
-        {
+        if(!in_array($ext, array('jpg', 'png'))) {
             exit;
         }
         $new_file_path = $_FILES['file']['tmp_name'] . '.' . $ext;
         move_uploaded_file($_FILES["file"]["tmp_name"], $new_file_path);
+        $tmp = FdHelperLib::crudApi('qiniu/auth', $written_language_tag, array('post'=>array('nothing'=>1)));
+        $token = $tmp['token'];
+
+        // 要上传文件的本地路径
+        $filePath = $new_file_path;
+
+        // 上传到七牛后保存的文件名
+        $newFilename = md5($new_file_path) . '.' . $ext;
+        $key = 'shaixuan/' . $newFilename;
+
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new Qiniu\Storage\UploadManager();
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
     }
-    $tmp = FdHelperLib::crudApi('qiniu/auth', $written_language_tag, array('post'=>array('nothing'=>1)));
-    $token = $tmp['token'];
-
-    // 要上传文件的本地路径
-    $filePath = $new_file_path;
-
-    // 上传到七牛后保存的文件名
-    $newFilename = md5($new_file_path) . '.' . $ext;
-    $key = 'shaixuan/' . $newFilename;
-
-    // 初始化 UploadManager 对象并进行文件的上传。
-    $uploadMgr = new Qiniu\Storage\UploadManager();
-    list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
 
     $v['title'] = '';
     $v['img_filename'] = $newFilename;
