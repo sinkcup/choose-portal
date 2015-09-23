@@ -1,9 +1,9 @@
 FROM php:apache
 MAINTAINER sinkcup <sinkcup@163.com>
 
-RUN apt-get update -qq
-RUN apt-get upgrade -y
-RUN apt-get install -y zlib1g-dev
+RUN apt-get update -qq && \
+  apt-get upgrade -y && \
+  apt-get install -y wget zlib1g-dev
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install zip
 ADD php.ini /usr/local/etc/php/
