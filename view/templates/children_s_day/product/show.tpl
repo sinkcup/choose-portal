@@ -23,8 +23,6 @@ require FdHelperLib::getViewFilePath('head');//由于head中的title是由数据
     <?php
     require FdHelperLib::getViewFilePath('module/show_product');
     require FdHelperLib::getViewFilePath('comments');
-    require FdHelperLib::getViewFilePath('related_items');
-    require FdHelperLib::getViewFilePath('bbs');
     ?>
     </div>
 </div>
