@@ -70,13 +70,23 @@
                 //循环行
                 foreach($v['detail_attribute'] as $attribute_name)
                 {
-                    echo '<li><span class="filter_name">' . $v['detail_attribute_name_wlp'][$attribute_name] . '</span>';
-                    if($attribute_name=='taobao_uri')
-                    {
-                        echo '<a target="_blank" href="' . $v['product'][$attribute_name] . '">' . $v['product'][$attribute_name] . '</a></li>';
+                    $label = '<li><span class="filter_name">' . $v['detail_attribute_name_wlp'][$attribute_name] . '</span>';
+                    if(in_array($attribute_name, array('amazon_cn_id', 'jd_id'))) {
+                        if(!empty($v['product'][$attribute_name])) {
+                            echo $label;
+                            switch ($attribute_name) {
+                                case 'jd_id':
+                                    $link = 'http://item.jd.com/' . $v['product'][$attribute_name] . '.html';
+                                    break;
+                                case 'amazon_cn_id':
+                                    $link = 'http://www.amazon.cn/dp/' . $v['product'][$attribute_name] . '/';
+                                    break;
+                            }
+                            echo '<a target="_blank" href="' . $link . '">' . $link . '</a></li>';
+                        }
                     }
-                    else
-                    {
+                    else {
+                        echo $label;
                         echo $v['product'][$attribute_name] . '</li>';
                     }
                 }
